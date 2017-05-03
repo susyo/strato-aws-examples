@@ -8,7 +8,10 @@ import com.amazonaws.services.ec2.model.RunInstancesResult;
 
 public class EC2Example {
 
+    // Fill in AMI id from Symphony
     private static final String AMI_IDENTIFIER="<ami identifier>";
+
+    // Fill in symphony region IP
     private static final String SYMPHONY_CLUSTER_ADDRESS="<cluster ip>";
     private static AmazonEC2 ec2;
 
