@@ -11,12 +11,12 @@ from subprocess import Popen, PIPE, STDOUT
 from botocore.handlers import disable_signing
 from inspect import getmembers, ismethod
 
-class s3api:
+class S3API:
     def __init__(self, KeyID, secretKey, endpointURL):
         self.resources = boto3.resource('s3', aws_access_key_id=KeyID, aws_secret_access_key=secretKey, endpoint_url=endpointURL)
         self.client = boto3.client('s3', aws_access_key_id=KeyID, aws_secret_access_key=secretKey, endpoint_url=endpointURL)
         self.transfer = boto3.s3.transfer
-#   self.resources.meta.client.meta.events.register('choose-signer.s3.*', disable_signing)
+#   May need the following for public bucket access: self.resources.meta.client.meta.events.register('choose-signer.s3.*', disable_signing)
 
     def bucketCreate(self, args):
         self.client.create_bucket(Bucket=args.bucket)
@@ -64,14 +64,15 @@ class s3api:
 
 
 
-def _get_args():
-    parser = argparse.ArgumentParser(description='***Get and upload cloud images***')
-    parser.add_argument('target', action='store', help='URL of the object store')
+def _get_args(commands):
+    from argparse import RawTextHelpFormatter
+    parser = argparse.ArgumentParser(description='***Boto3 examples for using Symphony S3 server***', formatter_class=RawTextHelpFormatter)
+    parser.add_argument('target', action='store', help='URL of the object store \n For Symphony use: http://<Symphony IP>:80/s3 \n For ASW S3 use: http://s3.amazonaws.com' )
     parser.add_argument('access_key', action='store', help='')
     parser.add_argument('secret_key', action='store', help='')
-    parser.add_argument('command', action='store', help="type help to get help on available commands")
+    parser.add_argument('command', action='store', help="One of: \n" + "\n".join(commands) )
 
-    parser.add_argument('--bucket', action='store', help='bucket to list')
+    parser.add_argument('--bucket', action='store', help='bucket to use')
     parser.add_argument('--file', action='store', help='file to upload')
     parser.add_argument('--key', action='store', help='key on the object store')
     parser.add_argument('--copies', action='store', help='number of copies per uploaded file')
@@ -84,17 +85,17 @@ def printList(aList):
         print item
 
 if __name__ == "__main__":
-    my_args = _get_args()
-    s3api = s3api(my_args.access_key, my_args.secret_key, my_args.target)
     commands = dict()
-    for item in getmembers(s3api):
+    for item in getmembers(S3API):
         key, method = item
-        if ismethod(method):
+        if ismethod(method) & ("__" not in key):
             commands[key] = method
 
-    if my_args.command == "help":
-        printList(commands.keys())
-    elif my_args.command in commands.keys():
+    my_args = _get_args(commands.keys())
+    s3api = S3API(my_args.access_key, my_args.secret_key, my_args.target)
+
+
+    if my_args.command in commands.keys():
         response = commands[my_args.command](my_args)
         if type(response) == type(list()):
             printList(response)
