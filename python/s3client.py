@@ -66,7 +66,6 @@ class S3API:
 
 def _get_args(commands):
     from argparse import RawTextHelpFormatter
-    #parser = ArgumentParser(description='test', formatter_class=RawTextHelpFormatter)
     parser = argparse.ArgumentParser(description='***Boto3 examples for using Symphony S3 server***', formatter_class=RawTextHelpFormatter)
     parser.add_argument('target', action='store', help='URL of the object store \n For Symphony use: http://<Symphony IP>:80/s3 \n For ASW S3 use: http://s3.amazonaws.com' )
     parser.add_argument('access_key', action='store', help='')
