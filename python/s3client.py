@@ -16,7 +16,7 @@ class S3API:
         self.resources = boto3.resource('s3', aws_access_key_id=KeyID, aws_secret_access_key=secretKey, endpoint_url=endpointURL)
         self.client = boto3.client('s3', aws_access_key_id=KeyID, aws_secret_access_key=secretKey, endpoint_url=endpointURL)
         self.transfer = boto3.s3.transfer
-#   May need the following for public bucket access: self.resources.meta.client.meta.events.register('choose-signer.s3.*', disable_signing)
+#   May need the following for public bucket access:        self.resources.meta.client.meta.events.register('choose-signer.s3.*', disable_signing)
 
     def bucketCreate(self, args):
         self.client.create_bucket(Bucket=args.bucket)
@@ -96,7 +96,7 @@ if __name__ == "__main__":
 
 
     if my_args.command in commands.keys():
-        response = commands[my_args.command](my_args)
+        response = commands[my_args.command](s3api, my_args)
         if type(response) == type(list()):
             printList(response)
         else:
