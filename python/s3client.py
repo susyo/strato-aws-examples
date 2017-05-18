@@ -16,7 +16,43 @@ from botocore.handlers import disable_signing
 from inspect import getmembers, ismethod
 
 
+def main():
+    """
+    This script shows and example of Boto3 integration with Stratoscale's Symphony Object Store which supports S3 APIs 
+
+    The script was written as a general purpose script allowing the user to use either AWS S3 or Symphony just point 
+    to the url of the object store provider - run the script with --help for assistance 
+    
+    """
+    commands = dict()
+    for item in getmembers(S3API):
+        key, method = item
+        if ismethod(method) & ("__" not in key):
+            commands[key] = method
+
+    my_args = _get_args(commands.keys())
+    s3api = S3API(my_args.access_key, my_args.secret_key, my_args.target)
+
+
+    if my_args.command in commands.keys():
+        response = commands[my_args.command](s3api, my_args)
+        if type(response) == type(list()):
+            printList(response)
+        else:
+            print response
+    else:
+        print "Command must be one of:"
+        printList(commands.keys())
+        exit(1)
+
+    exit(0)
+
+
+
+
 class ProgressPercentage(object):
+    """ A service class to report upload and download progress """
+
     def __init__(self, filename):
         self._filename = filename
         self._size = float(os.path.getsize(filename))
@@ -38,11 +74,19 @@ class ProgressPercentage(object):
 
 
 class S3API:
+    """ 
+    The actual example code which uses two different entry points into the boto3 S3 API:
+    The client library maps the AWS APIs as is while the more convenient resources library. 
+        
+    Farther more the transfer class assists with multipart operations
+    """
+
     def __init__(self, KeyID, secretKey, endpointURL):
         self.resources = boto3.resource('s3', aws_access_key_id=KeyID, aws_secret_access_key=secretKey, endpoint_url=endpointURL)
         self.client = boto3.client('s3', aws_access_key_id=KeyID, aws_secret_access_key=secretKey, endpoint_url=endpointURL)
         tc = boto3.s3.transfer.TransferConfig()
         self.transfer = boto3.s3.transfer.S3Transfer(client=self.client, config=tc)
+
 #   May need the following for public bucket access:        self.resources.meta.client.meta.events.register('choose-signer.s3.*', disable_signing)
 
     def bucketCreate(self, args):
@@ -113,29 +157,8 @@ def printList(aList):
     for item in aList:
         print item
 
-if __name__ == "__main__":
-    commands = dict()
-    for item in getmembers(S3API):
-        key, method = item
-        if ismethod(method) & ("__" not in key):
-            commands[key] = method
-
-    my_args = _get_args(commands.keys())
-    s3api = S3API(my_args.access_key, my_args.secret_key, my_args.target)
-
-
-    if my_args.command in commands.keys():
-        response = commands[my_args.command](s3api, my_args)
-        if type(response) == type(list()):
-            printList(response)
-        else:
-            print response
-    else:
-        print "Command must be one of:"
-        printList(commands.keys())
-        exit(1)
-
-    exit(0)
+if __name__ == '__main__':
+    sys.exit(main())
 
 
 
