@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
-
+import sys, os
+import threading
 import argparse
 import traceback
 import ConfigParser
@@ -14,11 +15,34 @@ from subprocess import Popen, PIPE, STDOUT
 from botocore.handlers import disable_signing
 from inspect import getmembers, ismethod
 
+
+class ProgressPercentage(object):
+    def __init__(self, filename):
+        self._filename = filename
+        self._size = float(os.path.getsize(filename))
+        self._seen_so_far = 0
+        self._last_seen = 0
+        self._lock = threading.Lock()
+
+    def __call__(self, bytes_amount):
+        # To simplify we'll assume this is hooked up
+        # to a single filename.
+        with self._lock:
+            self._seen_so_far += bytes_amount
+            percentage = (self._seen_so_far / self._size) * 100
+            sys.stdout.write(
+                "\r%s  %s / %s  (%.2f%%)" % (
+                    self._filename, self._seen_so_far, self._size,
+                    percentage))
+            sys.stdout.flush()
+
+
 class S3API:
     def __init__(self, KeyID, secretKey, endpointURL):
         self.resources = boto3.resource('s3', aws_access_key_id=KeyID, aws_secret_access_key=secretKey, endpoint_url=endpointURL)
         self.client = boto3.client('s3', aws_access_key_id=KeyID, aws_secret_access_key=secretKey, endpoint_url=endpointURL)
-        self.transfer = boto3.s3.transfer
+        tc = boto3.s3.transfer.TransferConfig()
+        self.transfer = boto3.s3.transfer.S3Transfer(client=self.client, config=tc)
 #   May need the following for public bucket access:        self.resources.meta.client.meta.events.register('choose-signer.s3.*', disable_signing)
 
     def bucketCreate(self, args):
@@ -50,10 +74,10 @@ class S3API:
     def uploadMultiPart(self, args):
         try:
             print "Uploading file:", args.file
-            tc = self.transfer.TransferConfig()
-            t = self.transfer.S3Transfer(client=self.client, config=tc)
-
-            t.upload_file(args.file, args.bucket , args.key)
+            checkpoint = time.time()
+            self.transfer.upload_file(args.file, args.bucket , args.key, callback=ProgressPercentage(args.file))
+            upload_speed = float(os.path.getsize(args.file)) / (time.time() - checkpoint) / 1024**2
+            return "\r\nRate %.2f%% MB / sec " % (upload_speed)
 
         except Exception as e:
             print "Error uploading: %s" % (e)
