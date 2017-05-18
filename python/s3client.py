@@ -67,18 +67,20 @@ class S3API:
         return allObjects
     # may need this later to print size. key = Bucket.lookup('my_key_name') -> key.size
 
-    def upload(self, args):
-        data = open(args.file, 'rb')
-        self.resources.Bucket(args.bucket).put_object(Key=args.key, Body=data)
+    def uploadSingle(self, args):
+        try:
+            data = open(args.file, 'rb')
+            self.resources.Bucket(args.bucket).put_object(Key=args.key, Body=data)
+        except Exception as e:
+            print "Error uploading: %s" % (e)
 
-    def uploadMultiPart(self, args):
+    def upload(self, args):
         try:
             print "Uploading file:", args.file
             checkpoint = time.time()
             self.transfer.upload_file(args.file, args.bucket , args.key, callback=ProgressPercentage(args.file))
             upload_speed = float(os.path.getsize(args.file)) / (time.time() - checkpoint) / 1024**2
             return "\r\nRate %.2f%% MB / sec " % (upload_speed)
-
         except Exception as e:
             print "Error uploading: %s" % (e)
 
