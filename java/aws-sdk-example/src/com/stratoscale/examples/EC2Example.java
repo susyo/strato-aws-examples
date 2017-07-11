@@ -25,7 +25,7 @@ public class EC2Example {
         // Creating Amazon credentials from key and secret
         BasicAWSCredentials credentials = new BasicAWSCredentials(AWS_ACCESS_KEY, AWS_SECRET_KEY);
         AwsClientBuilder.EndpointConfiguration symphonyEndpoint = new AwsClientBuilder.EndpointConfiguration(
-                String.format("http://%s/api/v2/ec2/", SYMPHONY_CLUSTER_ADDRESS),"Symphony");
+                String.format("https://%s/api/v2/ec2/", SYMPHONY_CLUSTER_ADDRESS),"Symphony");
 
         // Creating an EC2 client with the Symphony region endpoint, and credentials.
         AmazonEC2 ec2 = AmazonEC2ClientBuilder.standard()

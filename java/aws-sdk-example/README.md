@@ -6,7 +6,10 @@ Best to run it from an IDE, but in anycase, the it's the code example itself tha
 1. Make sure you have jre/jdk installed.
 2. Make sure you have gradle installed on your system
 
-
-## Run:
+## Run
 1. gradle clean build
 2. java -jar <path to jar file, located in ./build/lib/>
+
+## SSL Verification
+By default, Symphony arrives with self signed certificates. In order to avoid SSL verification, add 
+`-Dcom.amazonaws.sdk.disableCertChecking` to your JVM parameters.
