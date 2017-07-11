@@ -34,12 +34,12 @@ public class S3Example {
 
 	// Set S3 Client Endpoint to Symphony
         AwsClientBuilder.EndpointConfiguration symphonyEndpoint = new AwsClientBuilder.EndpointConfiguration(
-                String.format("%s://%s:1060", Protocol.HTTP, SYMPHONY_CLUSTER_ADDRESS),"");
+                String.format("%s://%s:1060", Protocol.HTTPS, SYMPHONY_CLUSTER_ADDRESS),"");
 
 	// Set signer type and http scheme
         ClientConfiguration conf = new ClientConfiguration()
                 .withSignerOverride(SIGNER_TYPE)
-                .withProtocol(Protocol.HTTP);
+                .withProtocol(Protocol.HTTPS);
 
         AmazonS3 S3Client = AmazonS3ClientBuilder.standard()
                 .withEndpointConfiguration(symphonyEndpoint)

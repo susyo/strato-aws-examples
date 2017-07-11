@@ -14,7 +14,8 @@ def main():
 
     # creating a connection to Symphony AWS Compatible region
     client = boto3.Session.client(boto3.session.Session(), service_name="ec2", region_name="symphony",
-                                  endpoint_url="http://<cluster ip>/api/v2/ec2/",
+                                  endpoint_url="https://<cluster ip>/api/v2/ec2/",
+                                  verify=False,
                                   aws_access_key_id="<key>",
                                   aws_secret_access_key="<secret>")
 
