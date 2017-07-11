@@ -12,4 +12,4 @@ Best to run it from an IDE, but in anycase, the it's the code example itself tha
 
 ## SSL Verification
 By default, Symphony arrives with self signed certificates. In order to avoid SSL verification, add 
--Dcom.amazonaws.sdk.disableCertChecking to your JVM parameters.
+`-Dcom.amazonaws.sdk.disableCertChecking` to your JVM parameters.
