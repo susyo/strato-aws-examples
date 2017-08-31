@@ -1,10 +1,10 @@
 provider "aws" {
-    access_key = "<key>"
-    secret_key = "<secret>"
+    access_key = "${var.access_key}"
+    secret_key = "${var.secret_key}"
 
-    # Tell terraform to 'talk' with symphony
+
     endpoints {
-        ec2 = "http://<cluster ip>/api/v2/ec2"
+        ec2 = "https://${var.symphony_ip}/api/v2/ec2"
     }
 
     insecure = "true"
@@ -12,5 +12,5 @@ provider "aws" {
     skip_credentials_validation = true
 
     # No importance for this value currently
-    region = "eu-west-1"
+    region = "us-east-1"
 }
