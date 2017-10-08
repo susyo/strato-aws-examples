@@ -1,3 +1,4 @@
+# Creating a VPC & Networking
 resource "aws_vpc" "default" {
     cidr_block = "10.48.0.0/16"
     enable_dns_support = false
@@ -7,7 +8,9 @@ resource "aws_subnet" "subnet1"{
     cidr_block = "10.48.1.0/24"
     vpc_id = "${aws_vpc.default.id}"
 }
+###################################
 
+# Creating two instances of web server ami
 resource "aws_instance" "web1" {
     ami = "${var.ami_webserver}"
     instance_type = "t2.micro"
@@ -24,6 +27,9 @@ resource "aws_instance" "web2" {
     security_groups = ["${var.sg_web_servers}"]
 }
 
+##################################
+
+# Creating and attaching the load balancer
 resource "aws_alb" "alb" {
     subnets = ["${aws_subnet.subnet1.id}"]
     internal = true
