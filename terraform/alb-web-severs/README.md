@@ -10,6 +10,3 @@ To get the ami id, simply fetch the image uuid from the Symphony UI, and convert
 2. Create/Specify a security group
 3. Modify the `terraform.tfvars` file according to your environment
 4. Run `terraform apply`
-
-## Notes
-The script assumes the local default network can be routed using an existing VLAN
