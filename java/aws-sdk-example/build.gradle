@@ -1,7 +1,18 @@
 group 'aws-sdk-example'
-version '1.0-SNAPSHOT'
+version '1.0'
 
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.1'
+    }
+}
+
+apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: 'java'
+build.dependsOn shadowJar
 
 sourceCompatibility = 1.8
 
@@ -13,6 +24,13 @@ dependencies {
     compile 'com.amazonaws:aws-java-sdk:1.11.125'
     compile 'commons-logging:commons-logging:1.2'
     testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+shadowJar {
+    manifest {
+        attributes 'Main-Class': 'com.stratoscale.examples.EC2Example'
+    }
+    classifier 'all'
 }
 
 jar {
