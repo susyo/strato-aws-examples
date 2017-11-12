@@ -7,17 +7,14 @@ log:
     environment: staging
 storage:
   s3:
-    accesskey: <access key>
-    secretkey: <secret key>
-    region: stratoscale
-    regionendpoint: http://<cluster vip>
-    bucket: <bucket name>
+    accesskey: <ACCESS_KEY>
+    secretkey: <SECRET_KEY>
+    region: symphony
+    regionendpoint: https://<Symphony Region>:1060
+    bucket: <Symphony S3 Bucket Name>
     encrypt: false
     secure: false
-    v4auth: false
-    rootdirectory: /
-  cache:
-    blobdescriptor: inmemory
+    v4auth: true
 http:
   addr: :5000
   headers:
