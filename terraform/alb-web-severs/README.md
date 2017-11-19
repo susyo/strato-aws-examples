@@ -1,4 +1,4 @@
-# Overview - ALB
+# Overview - Application Load Balancer (ALB/ELBv2)
 This terraform will create two webservers from a given ami, and instantiate a load balancer to actively balance them.
 To get the ami id, simply fetch the image uuid from the Symphony UI, and convert it to the AWS format:
 `ami-<uuid without dashes>`
