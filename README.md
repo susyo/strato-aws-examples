@@ -8,8 +8,8 @@ stratoscale supports, as well as helping you get started with aws tooling agains
 ## General Information
 Currently supported service apis include:
 1. EC2 APIs at `https://<region ip>/api/v2/ec2/`
-2. RDS APIs at `https://<region ip>/api/v2/aws/rds/`
-3. ELB APIs at `https://<region ip>/api/v2/aws/elb/`
+2. RDS APIs at `https://<region ip>/api/v2/aws/rds`
+3. ELB APIs at `https://<region ip>/api/v2/aws/elb`
 
 ## Submittion Rules:
 1. Submit working examples only
