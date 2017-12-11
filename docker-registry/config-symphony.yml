@@ -9,7 +9,7 @@ storage:
   s3:
     accesskey: <ACCESS_KEY>
     secretkey: <SECRET_KEY>
-    region: symphony
+    region: us-east-1
     regionendpoint: https://<Symphony Region>:1060
     bucket: <Symphony S3 Bucket Name>
     encrypt: false
