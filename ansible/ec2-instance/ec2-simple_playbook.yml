@@ -1,0 +1,25 @@
+- name: Create EC2 instance Symphony
+  hosts: localhost
+  connection: local
+  gather_facts: False
+  vars:
+    image_ami: <AMI image ID>
+    instance_type: t2.micro
+    instance_count: 1
+
+  tasks:
+   - ec2:
+      aws_access_key: <AWS Access Key ID>
+      aws_secret_key: <AWS Secret Key ID>
+      ec2_url: https://<API endpoint IP>/api/v2/ec2/
+#      region: "{{ region }}"    # DO NOT SPECIFY A REGION WHEN USING STRATOSCALE. Setting a region causes the path in ec2_url (“/api/v2/ec2/”) to be ignored.
+      validate_certs: no
+#      key_name: "{{ keypair }}"
+      count: "{{ instance_count }}"
+      image: "{{ image_ami }}"
+      instance_type: "{{ instance_type }}"
+     register: ec2
+
+   - debug:
+      msg: "Created ec2 instance ID {{ item.id }}"
+     with_items: "{{ ec2.instances }}"
