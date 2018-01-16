@@ -27,11 +27,3 @@ resource "aws_db_instance" "dbinst1" {
   skip_final_snapshot = true
   db_subnet_group_name = "${aws_db_subnet_group.dbsubnet.name}"
 }
-
-output "dbaddress" {
-  value = "${aws_db_instance.dbinst1.address}"
-}
-
-output "endpoint" {
-  value = "${aws_db_instance.dbinst1.endpoint}"
-}
