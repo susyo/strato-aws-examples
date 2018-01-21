@@ -1,9 +1,19 @@
+# Filter a centos based image
+data "aws_ami" "linux"{
+    filter{
+        name="name"
+        values=["*centos*"]
+    }
+}
+
+# Create 3 instances, and name them according to count
 resource "aws_instance" "ec2_instance" {
-    ami = "${var.example_ami}"
+    ami = "${data.aws_ami.linux.image_id}"
 
     tags{
-        Name="ec2"
+        Name="instance${count.index}"
     }
     # Can use any aws instance type supported by symphony
     instance_type = "t2.micro"
+    count=3
 }
