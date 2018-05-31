@@ -4,7 +4,7 @@ provider "aws" {
 
     endpoints {
         elb = "https://${var.symphony_ip}/api/v2/aws/elb"
-        ec2 = "https://${var.symphony_ip}/api/v2/ec2"
+        ec2 = "https://${var.symphony_ip}/api/v2/aws/ec2"
     }
 
     insecure = "true"

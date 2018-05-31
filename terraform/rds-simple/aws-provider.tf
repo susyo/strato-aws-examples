@@ -4,7 +4,7 @@ provider "aws" {
 
 
     endpoints {
-        ec2 = "https://${var.symphony_ip}/api/v2/ec2"
+        ec2 = "https://${var.symphony_ip}/api/v2/aws/ec2"
         rds = "https://${var.symphony_ip}/api/v2/aws/rds"
     }
 

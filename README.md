@@ -7,7 +7,7 @@ stratoscale supports, as well as helping you get started with aws tooling agains
 
 ## General Information
 Currently supported service apis include:
-1. EC2 APIs at `https://<region ip>/api/v2/ec2/`
+1. EC2 APIs at `https://<region ip>/api/v2/aws/ec2/`
 2. RDS APIs at `https://<region ip>/api/v2/aws/rds`
 3. ELB APIs at `https://<region ip>/api/v2/aws/elb`
 
@@ -19,4 +19,4 @@ Currently supported service apis include:
 ## Examples:
 * `access_key = "<key>"`
 * `secret_key = "<secret>"`
-* `endpoint_url = "https://<symphony-region-ip>/api/v2/ec2/"`
+* `endpoint_url = "https://<symphony-region-ip>/api/v2/aws/ec2/"`

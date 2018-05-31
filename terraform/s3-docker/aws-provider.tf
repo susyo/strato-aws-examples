@@ -5,7 +5,7 @@ provider "aws" {
 
     endpoints {
         s3 = "https://${var.symphony_ip}:1060"
-        ec2 = "https://${var.symphony_ip}/api/v2/ec2"
+        ec2 = "https://${var.symphony_ip}/api/v2/aws/ec2"
     }
 
     insecure = "true"
