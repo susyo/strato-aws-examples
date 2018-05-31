@@ -105,3 +105,17 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
+
+
+#  Local .terraform directories
+**/.terraform/*
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
+
+# .tfvars files
+*.tfvars
+
+# Ansible
+*.retry
