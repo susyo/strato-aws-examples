@@ -7,4 +7,5 @@ ami_image = "<image ID>"
 
 # optional
 # instance_type = "<instance-type>"
+# instance_number = <number of instances>
 
