@@ -5,7 +5,9 @@ variable "access_key" {}
 
 # Main variables
 variable "ami_my_image" {}
-variable "keypair" {}
-variable "instance_type" {}
-
-variable "count" {}
+variable "instance_number" {
+  default = 1
+}
+variable "instance_type" {
+  default = "t2.micro"
+}
