@@ -114,8 +114,5 @@ Temporary Items
 *.tfstate
 *.tfstate.*
 
-# .tfvars files
-*.tfvars
-
 # Ansible
 *.retry
