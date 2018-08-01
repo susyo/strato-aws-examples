@@ -1,9 +1,3 @@
-# Region Setting
-symphony_ip = "<Symphony Region>"
-ami_webserver = "<ami>"
-sg_web_servers = "<security group name>"
-
-
 # .tfvars Sample File
 # Remember to omit the .sample from the extension prior to running Terraform
 

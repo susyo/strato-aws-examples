@@ -15,9 +15,24 @@ resource "aws_subnet" "subnet1"{
     vpc_id = "${aws_vpc.default.id}"
 }
 
+# add dhcp options
+resource "aws_vpc_dhcp_options" "dns_resolver" {
+  domain_name_servers = ["8.8.8.8", "8.8.4.4"]
+}
+
+# associate dhcp with vpc
+resource "aws_vpc_dhcp_options_association" "dns_resolver" {
+  vpc_id          = "${aws_vpc.default.id}"
+  dhcp_options_id = "${aws_vpc_dhcp_options.dns_resolver.id}"
+}
+
 
 ###################################
 # Cloud init data
+
+data "template_file" "webconfig" {
+  template = "${file("./webconfig.cfg")}"
+}
 
 data "template_cloudinit_config" "web_config" {
   gzip = false
@@ -26,7 +41,7 @@ data "template_cloudinit_config" "web_config" {
   part {
     filename     = "webconfig.cfg"
     content_type = "text/cloud-config"
-    content      = "${data.template_file.web.rendered}"
+    content      = "${data.template_file.webconfig.rendered}"
   }
 }
 
@@ -55,9 +70,11 @@ resource "aws_instance" "web2" {
 ##################################
 # Security group definitions
 
+# Web server sec group 
+
 resource "aws_security_group" "web-sec" {
   name = "webserver-secgroup"
-  vpc_id = "${aws_vpc.app_vpc.id}"
+  vpc_id = "${aws_vpc.default.id}"
 
   # Internal HTTP access from anywhere
   ingress {
@@ -87,7 +104,7 @@ resource "aws_security_group" "web-sec" {
 # allow all egress traffic (needed for server to download packages)
 resource "aws_security_group" "allout" {
   name = "allout-secgroup"
-  vpc_id = "${aws_vpc.app_vpc.id}"
+  vpc_id = "${aws_vpc.default.id}"
 
   egress {
     from_port   = 0
@@ -97,16 +114,48 @@ resource "aws_security_group" "allout" {
   }
 }
 
+# LB Sec group definition 
+
+resource "aws_security_group" "lb-sec" {
+  name = "lb-secgroup"
+  vpc_id = "${aws_vpc.default.id}"
+
+  # HTTP access from anywhere
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  #ping from anywhere
+    ingress {
+    from_port   = 8
+    to_port     = 0
+    protocol    = "icmp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+    egress {
+      from_port = 0
+      to_port = 0
+      protocol = "-1"
+      cidr_blocks = ["0.0.0.0/0"]
+  }
+}
 ##################################
 
 # Creating and attaching the load balancer
+# to make LB internal (no floating IP) set internal to true
+
 resource "aws_alb" "alb" {
     subnets = ["${aws_subnet.subnet1.id}"]
-    internal = true
+    internal = false
+    security_groups = ["${aws_security_group.lb-sec.id}"]
+    subnets = ["${aws_subnet.subnet1.id}"]
 }
 
 resource "aws_alb_target_group" "targ" {
-    port = 80
+    port = 8080
     protocol = "HTTP"
     vpc_id = "${aws_vpc.default.id}"
 }
@@ -114,13 +163,13 @@ resource "aws_alb_target_group" "targ" {
 resource "aws_alb_target_group_attachment" "attach_web1" {
     target_group_arn = "${aws_alb_target_group.targ.arn}"
     target_id       = "${aws_instance.web1.id}"
-    port             = 80
+    port             = 8080
 }
 
 resource "aws_alb_target_group_attachment" "attach_web2" {
     target_group_arn = "${aws_alb_target_group.targ.arn}"
     target_id       = "${aws_instance.web2.id}"
-    port             = 80
+    port             = 8080
 }
 
 resource "aws_alb_listener" "list" {
@@ -129,5 +178,5 @@ resource "aws_alb_listener" "list" {
         type = "forward"
     }
     load_balancer_arn = "${aws_alb.alb.arn}"
-    port = 8080
+    port = 80
 }
