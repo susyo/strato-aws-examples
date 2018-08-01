@@ -13,11 +13,16 @@ resource "aws_vpc" "default" {
 resource "aws_subnet" "subnet1"{
     cidr_block = "10.48.1.0/24"
     vpc_id = "${aws_vpc.default.id}"
+
+    tags {
+      Name = "Web subnet"
+  }
 }
 
 # add dhcp options
 resource "aws_vpc_dhcp_options" "dns_resolver" {
   domain_name_servers = ["8.8.8.8", "8.8.4.4"]
+  
 }
 
 # associate dhcp with vpc
@@ -49,21 +54,31 @@ data "template_cloudinit_config" "web_config" {
 
 # Creating two instances of web server ami with cloudinit
 resource "aws_instance" "web1" {
+    
     ami = "${var.ami_webserver}"
     instance_type = "t2.micro"
     subnet_id = "${aws_subnet.subnet1.id}"
 
     vpc_security_group_ids = ["${aws_security_group.web-sec.id}", "${aws_security_group.allout.id}"]
     user_data = "${data.template_cloudinit_config.web_config.rendered}"
+
+    tags {
+    Name = "Web server 1"
+  }
 }
 
 resource "aws_instance" "web2" {
+     
     ami = "${var.ami_webserver}"
     instance_type = "t2.micro"
     subnet_id = "${aws_subnet.subnet1.id}"
 
     vpc_security_group_ids = ["${aws_security_group.web-sec.id}", "${aws_security_group.allout.id}"]
     user_data = "${data.template_cloudinit_config.web_config.rendered}"
+
+    tags {
+    Name = "Web server 2"
+  }
 }
 
 
@@ -148,6 +163,7 @@ resource "aws_security_group" "lb-sec" {
 # to make LB internal (no floating IP) set internal to true
 
 resource "aws_alb" "alb" {
+    name = "web-alb"
     subnets = ["${aws_subnet.subnet1.id}"]
     internal = false
     security_groups = ["${aws_security_group.lb-sec.id}"]
