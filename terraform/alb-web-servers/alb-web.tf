@@ -151,7 +151,7 @@ resource "aws_alb" "alb" {
     subnets = ["${aws_subnet.subnet1.id}"]
     internal = false
     security_groups = ["${aws_security_group.lb-sec.id}"]
-    subnets = ["${aws_subnet.subnet1.id}"]
+    load_balancer_type = "application"
 }
 
 resource "aws_alb_target_group" "targ" {
