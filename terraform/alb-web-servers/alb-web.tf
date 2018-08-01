@@ -32,6 +32,24 @@ resource "aws_vpc_dhcp_options_association" "dns_resolver" {
 }
 
 
+# create igw
+resource "aws_internet_gateway" "app_igw" {
+  vpc_id = "${aws_vpc.default.id}"
+}
+
+#new default route table with igw association 
+
+resource "aws_default_route_table" "default" {
+   default_route_table_id = "${aws_vpc.app_vpc.default_route_table_id}"
+
+   route {
+       cidr_block = "0.0.0.0/0"
+       gateway_id = "${aws_internet_gateway.app_igw.id}"
+   }
+}
+
+
+
 ###################################
 # Cloud init data
 
