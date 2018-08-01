@@ -1,4 +1,4 @@
-#Define API Endpoints for Symphony
+#Define API Endpoints for Stratoscale Symphony
 
 provider "aws" {
   access_key = "${var.symp_access_key}"
@@ -16,6 +16,16 @@ provider "aws" {
 
   # No importance for this value currently
   region = "us-east-2"
-
-  version = "<= 1.20.0"
+  version = "1.28"
 }
+
+
+# aws credentials
+/*
+provider "aws" {
+
+  access_key = "${var.aws_access_key}"
+  secret_key = "${var.aws_secret_key}"
+  region = "eu-west-1"
+}
+*/
