@@ -15,3 +15,4 @@ To get the ami id, simply fetch the image uuid from the Symphony UI, and convert
 2. Create/Specify a security group
 3. Modify the `terraform.tfvars` file according to your environment
 4. Run `terraform apply`
+5. After the solution is deployed, you should be able to go to the IP of your load balancer and refresh, each time it should redirect you to the other web server which is displaying it's instance ID so you know you're on a different server. 
