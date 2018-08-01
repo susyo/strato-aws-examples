@@ -40,7 +40,7 @@ resource "aws_internet_gateway" "app_igw" {
 #new default route table with igw association 
 
 resource "aws_default_route_table" "default" {
-   default_route_table_id = "${aws_vpc.app_vpc.default_route_table_id}"
+   default_route_table_id = "${aws_vpc.default.default_route_table_id}"
 
    route {
        cidr_block = "0.0.0.0/0"
