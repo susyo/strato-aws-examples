@@ -92,10 +92,6 @@ resource "aws_alb_target_group" "targ" {
   port = 8080
   protocol = "HTTP"
   vpc_id = "${aws_vpc.app_vpc.id}"
-
-  #workaround - won't be needed in 4.2.6
-  lifecycle {
-    ignore_changes = ["port", "target_type", "vpc_id"]
   }
 }
 
