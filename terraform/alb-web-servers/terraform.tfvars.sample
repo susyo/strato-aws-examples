@@ -1,21 +1,25 @@
+# Region Setting
+symphony_ip = "<Symphony Region>"
+ami_webserver = "<ami>"
+sg_web_servers = "<security group name>"
+
+
 # .tfvars Sample File
 # Remember to omit the .sample from the extension prior to running Terraform
 
 
 # Region Credentials
-symphony_ip = "demo4.stratoscale.com"
-access_key = "e5d245b16c924750b2c8bfcc648a693f"
-secret_key = "0233b68c8ef04e0aad2ff9a335bcb15f"
+symphony_ip = "<region ip>"
+access_key = "<access key>"
+secret_key = "<secret key>"
 
 # Reccomend for you to use Xenial's latest cloud image
 # located here: https://cloud-images.ubuntu.com/xenial/current/xenial-server-cloudimg-amd64-disk1.img 
 
-#demo4 xenial
+ami_image = "<image ID>"
 
-ami_image = "ami-f8d581e6cf6448258ce1253de50cfc3a"
 
 
 # optional
 # instance_type = "<instance-type>"
 # instance_number = <number of instances>
-
