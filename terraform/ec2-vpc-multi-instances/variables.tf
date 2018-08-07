@@ -4,7 +4,7 @@ variable "secret_key" {}
 variable "access_key" {}
 
 # Main variables
-variable "ami_my_image" {}
+variable "ami_image" {}
 variable "instance_number" {
   default = 1
 }
