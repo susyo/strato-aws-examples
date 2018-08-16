@@ -54,9 +54,6 @@ resource "aws_instance" "myapp_instance" {
     tags{
         Name="my_instance_${count.index}"
     }
-
-    # The following line is not required Symphony >= v4.2.7
-    associate_public_ip_address = true
 }
 
 resource "aws_eip" "myapp_instance_eip" {
