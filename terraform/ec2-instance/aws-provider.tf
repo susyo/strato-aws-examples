@@ -11,9 +11,11 @@ provider "aws" {
   insecure = "true"
   skip_metadata_api_check = true
   skip_credentials_validation = true
+  skip_requesting_account_id = true
+
+  # Pinning AWS plugin version
+  version = "=1.31.0"
 
   # No importance for this value currently
-    region = "us-east-2"
-  # Version is pinned to 1.28 for now 
-    version = "1.28"
+  region = "us-east-1"
 }
