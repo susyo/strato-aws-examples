@@ -9,12 +9,9 @@ symphony_ip = ""
 web_number = "2"
 
 # Use Public Xenial cloud image ami
-# For list of official AMI's see: https://cloud-images.ubuntu.com/locator/ec2/
-# Quick reference:
-# us-east-1: ami-a4dc46db
-# us-east-2: ami-6a003c0f
-# eu-west-1: ami-58d7e821
 
+# Recommend use of Xenial's latest cloud image
+# located here: https://cloud-images.ubuntu.com/xenial/current/xenial-server-cloudimg-amd64-disk1.img
 web_ami = ""
 web_instance_type = "t2.medium"
 
