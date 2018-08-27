@@ -1,9 +1,36 @@
 
-#Provision load balancer and associated security group
+#Provision load balancer
+resource "aws_alb" "alb" {
+  subnets = ["${aws_subnet.pub_subnet.id}"]
+  internal = false
+  security_groups = ["${aws_security_group.lb-sec.id}"]
+}
 
-###############################################
-## SECURITY GROUP DEFINITION 
-###############################################
+output "lb_eip" {
+  value = "${aws_alb.alb.dns_name}"
+}
+
+resource "aws_alb_target_group" "targ" {
+  port = 8080
+  protocol = "HTTP"
+  vpc_id = "${aws_vpc.app_vpc.id}"
+}
+
+resource "aws_alb_target_group_attachment" "attach_web" {
+  target_group_arn = "${aws_alb_target_group.targ.arn}"
+  target_id = "${element(aws_instance.web-server.*.id, count.index)}"
+  port = 8080
+  count = "${var.web_number}"
+}
+
+resource "aws_alb_listener" "list" {
+  "default_action" {
+    target_group_arn = "${aws_alb_target_group.targ.arn}"
+    type = "forward"
+  }
+  load_balancer_arn = "${aws_alb.alb.arn}"
+  port = 80
+}
 
 resource "aws_security_group" "lb-sec" {
   name = "lb-secgroup"
@@ -38,79 +65,3 @@ resource "aws_security_group" "lb-sec" {
       cidr_blocks = ["0.0.0.0/0"]
   }
 }
-
-###############################################
-## NLB CONFIGURATION 
-###############################################
-
-# NLB definition
-resource "aws_lb" "web-lb" {
-  name = "web-lb-tf"
-  internal = false
-  load_balancer_type = "network"
-  security_groups = ["${aws_security_group.lb-sec.id}"]
-  subnets = ["${aws_subnet.pub_subnet1.id}","${aws_subnet.pub_subnet2.id}"]
-}
-#Target group definition for NLB
-resource "aws_lb_target_group" "targetgrp" {
-  port = 8080
-  protocol = "TCP"
-  vpc_id = "${aws_vpc.app_vpc.id}"
-}
-
-# NLB attachment
-resource "aws_lb_target_group_attachment" "attach_web" {
-  target_group_arn = "${aws_lb_target_group.targetgrp.arn}"
-  target_id = "${element(aws_instance.web-server.*.id, count.index)}"
-  port = 8080
-  count = "${var.web_number}"
-}
-
-# Listener for NLB
-resource "aws_lb_listener" "webport" {
-  load_balancer_arn = "${aws_lb.web-lb.arn}"
-  port = 80
-  protocol = "TCP"
-   default_action {
-    target_group_arn = "${aws_lb_target_group.targetgrp.arn}"
-    type = "forward"
-  }
-}
-
-
-###############################################
-## ALB CONFIGURATION - Not working. Keep getting bad gateway errors. Went with NLB instead.
-###############################################
-/*
-resource "aws_alb" "alb" {
-  subnets = ["${aws_subnet.pub_subnet1.id}","${aws_subnet.pub_subnet2.id}"]
-  internal = false
-  security_groups = ["${aws_security_group.lb-sec.id}"]
-}
-
-resource "aws_alb_target_group" "targ" {
-  port = 8080
-  protocol = "HTTP"
-  vpc_id = "${aws_vpc.app_vpc.id}"
-  }
-}
-
-resource "aws_alb_target_group_attachment" "attach_web" {
-  target_group_arn = "${aws_alb_target_group.targ.arn}"
-  target_id = "${element(aws_instance.web-server.*.id, count.index)}"
-  port = 8080
-  count = "${var.web_number}"
-}
-
-resource "aws_alb_listener" "list" {
-  "default_action" {
-    target_group_arn = "${aws_alb_target_group.targ.arn}"
-    type = "forward"
-  }
-  load_balancer_arn = "${aws_alb.alb.arn}"
-  port = 80
-}
-
-*/
-
-
