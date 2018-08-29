@@ -1,0 +1,8 @@
+access_key = "cefb1886349749dc85cf4a90a411494b"
+secret_key = "e2de073a826947619d259bda9f5c991d"
+symphony_ip = "10.16.146.109"
+aws_ami = "ami-8f9f166123824cdb810815cab5af981c"
+user_id = "admin"
+sns_topic_name_prefix = "cloudwatch-sns-topic"
+cloudwatch_alarm_prefix = "cloudwatch_alarm_"
+instance_type = "t2.micro"

@@ -4,8 +4,8 @@ provider "aws" {
 
   endpoints {
     ec2 = "https://${var.symphony_ip}/api/v2/aws/ec2"
-    elb = "https://${var.symphony_ip}/api/v2/aws/elb"
-    rds = "https://${var.symphony_ip}/api/v2/aws/rds"
+    sns = "https://${var.symphony_ip}/api/v2/aws/sns"
+    cloudwatch = "https://${var.symphony_ip}/api/v2/aws/cloudwatch"
   }
 
   insecure = "true"
